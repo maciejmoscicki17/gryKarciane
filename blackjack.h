@@ -3,7 +3,6 @@
 
 #include <QDialog>
 #include "card.h"
-
 namespace Ui {
 class blackjack;
 }
@@ -19,6 +18,10 @@ public:
     void setupCards();
     Card getCard();
     void resetAll();
+    void delay(int duration);
+    void showPlayerInfo(Card card, int score);
+    void showDealerCard(Card card, int score);
+
 private slots:
     void on_btnStart_clicked();
 

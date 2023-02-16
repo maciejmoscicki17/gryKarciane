@@ -28,7 +28,11 @@
      <height>151</height>
     </rect>
    </property>
-   <layout class="QGridLayout" name="dealerCardsLayout"/>
+   <layout class="QGridLayout" name="dealerCardsLayout">
+    <property name="sizeConstraint">
+     <enum>QLayout::SetDefaultConstraint</enum>
+    </property>
+   </layout>
   </widget>
   <widget class="QWidget" name="gridLayoutWidget_2">
    <property name="geometry">
@@ -88,6 +92,9 @@
      <width>291</width>
      <height>51</height>
     </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>Rezultat</string>

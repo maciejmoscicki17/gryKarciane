@@ -8,65 +8,23 @@
 #include <QGraphicsPixmapItem>
 #include <QMessageBox>
 #include <QTimer>
-#include <thread>
+#include <QGraphicsOpacityEffect>
+#include <QPropertyAnimation>
+#include <QFrame>
+#include <QThread>
+#include <QPalette>
 
 blackjack::blackjack(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::blackjack)
 {
+    this->setStyleSheet("*{background-image:url(\"images/background.jpg\"); background-position: center;} "
+                        "");
     int w=100, h=152;
     ui->setupUi(this);
     this->setFixedSize(this->size());
-
-//    QPixmap image1("images/karty/as-kier.png");
-//    QPixmap image2("images/karty/as-pik.png");
-//    QPixmap image3("images/karty/as-karo.png");
-//    QPixmap image4("images/karty/trefl/as-trefl.png");
-//    QGridLayout *layout = new QGridLayout();
-//    QLabel * Label = new QLabel(this);
-//    Label->resize(w,h);
-//    Label->setPixmap(image1.scaled(w,h,Qt::KeepAspectRatio));
-//    QLabel * Label2 = new QLabel(this);
-//    Label2->resize(w,h);
-//    Label2->setPixmap(image2.scaled(w,h,Qt::KeepAspectRatio));
-//    QLabel * Label3 = new QLabel(this);
-//    Label3->resize(w,h);
-//    Label3->setPixmap(image3.scaled(w,h,Qt::KeepAspectRatio));
-//    QLabel * Label4 = new QLabel(this);
-//    Label4->resize(w,h);
-//    Label4->setPixmap(image4.scaled(w,h,Qt::KeepAspectRatio));
-//    layout->addWidget(Label,0,0);
-//    layout->addWidget(Label2,0,1);
-//    Label2->setGeometry(QRect(50,50,w,h));
-//    layout->addWidget(Label3,0,2);
-//    Label3->setGeometry(QRect(100,50,w,h));
-
-//    layout->addWidget(Label4,0,3);
-//    Label4->setGeometry(QRect(150,50,w,h));
-
-//    QLabel * Label11 = new QLabel(this);
-//    Label11->resize(w,h);
-//    Label11->setPixmap(image1.scaled(w,h,Qt::KeepAspectRatio));
-//    QLabel * Label12 = new QLabel(this);
-//    Label12->resize(w,h);
-//    Label12->setPixmap(image2.scaled(w,h,Qt::KeepAspectRatio));
-//    QLabel * Label13 = new QLabel(this);
-//    Label13->resize(w,h);
-//    Label13->setPixmap(image3.scaled(w,h,Qt::KeepAspectRatio));
-//    QLabel * Label14 = new QLabel(this);
-//    Label14->resize(w,h);
-//    Label14->setPixmap(image4.scaled(w,h,Qt::KeepAspectRatio));
-//    layout->addWidget(Label11,1,0);
-//    layout->addWidget(Label12,1,1);
-//    Label12->setGeometry(QRect(50,50,w,h));
-//    layout->addWidget(Label13,1,2);
-//    Label13->setGeometry(QRect(100,50,w,h));
-
-//    layout->addWidget(Label14,1,3);
-//    Label14->setGeometry(QRect(150,50,w,h));
-//    qInfo() << Label14->geometry();
-//    this->setLayout(layout);
-
+    ui->dealerCardsLayout->setAlignment(Qt::AlignHCenter);
+    ui->playerCardsLayout->setAlignment(Qt::AlignHCenter);
 }
 
 
@@ -118,94 +76,159 @@ void blackjack::resetAll()
 
 }
 
+void blackjack::delay(int duration)
+{
+    QEventLoop eventLoop;
+    QTimer::singleShot(duration, &eventLoop, &QEventLoop::quit);
+    eventLoop.exec();
+}
+
+void blackjack::showPlayerInfo(Card card, int score)
+{
+    QPixmap *image1 = card.getFace();
+    QLabel * label = new QLabel(this);
+    label->resize(w,h);
+    label->setPixmap((*image1).scaled(w,h,Qt::KeepAspectRatio));
+    QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(label);
+    label->setGraphicsEffect(effect);
+
+    QPropertyAnimation *animation = new QPropertyAnimation(effect, "opacity");
+    animation->setDuration(500);
+    animation->setStartValue(0.0);
+    animation->setEndValue(1.0);
+    animation->start();
+    auto items = ui->playerCardsLayout->count();
+
+    ui->playerCardsLayout->addWidget(label,0,items);
+}
+
+void blackjack::showDealerCard(Card card, int score)
+{
+    QPixmap *image1 = card.getFace();
+    QLabel * label = new QLabel(this);
+    label->resize(w,h);
+    label->setPixmap((*image1).scaled(w,h,Qt::KeepAspectRatio));
+
+    QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(label);
+    label->setGraphicsEffect(effect);
+
+    QPropertyAnimation *animation = new QPropertyAnimation(effect, "opacity");
+    animation->setDuration(500);
+    animation->setStartValue(0.0);
+    animation->setEndValue(1.0);
+    animation->start();
+
+
+
+    auto items = ui->dealerCardsLayout->count();
+    ui->dealerCardsLayout->addWidget(label,0,items);
+    ui->lblDealerScore->setText("Wynik dealera: " + QString::number(score));
+}
+
 void blackjack::on_btnStart_clicked()
 {
     ui->btnStart->setDisabled(true);
     setupCards();
-    int w=100, h=152;
+    bool gameOn = true;
     int wynik = 0;
-        bool gameOn = true;
-        while (gameOn)
-        {
-            auto los = getCard();
+    int pause = 1000;
+    while (gameOn)
+    {
+        auto los = getCard();
+        QTimer *timer = new QTimer(this);
+        timer->singleShot(pause, [this, los, wynik] {
+            showPlayerInfo(los, wynik);
 
-            QPixmap *image1 = los.getFace();
-            QLabel * label = new QLabel(this);
-            label->resize(w,h);
-            label->setPixmap((*image1).scaled(w,h,Qt::KeepAspectRatio));
-            auto items = ui->playerCardsLayout->count();
-            qInfo() << "Items1: " << items;
+        });
+        delete timer;
 
-            ui->playerCardsLayout->addWidget(label,0,items);
-            los.printInfo();
-            int val = los.getValue(true);
-            if(val == 14){
-                QString message = "Jaką wartość ma mieć as?";
-                QMessageBox msgBox;
-                msgBox.setText(message);
-                msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-                msgBox.setDefaultButton(QMessageBox::No);
-                msgBox.setButtonText(QMessageBox::Yes, "1");
-                msgBox.setButtonText(QMessageBox::No, "10");
-                int ret = msgBox.exec();
-                val = (ret == QMessageBox::Yes) ? 1 : 10;
-            }
-
-            wynik += val;
-            QString str = "Twój wynik: " + QString::number(wynik);
-            ui->lblPlayerScore->setText(str);
-            if (wynik > 21) break;
-
-            qInfo() << "Items2: " << items;
-            QString message = str + ", czy chcesz kontynuować?";
+        los.printInfo();
+        int val = los.getValue(true);
+        if(val == 14){
+            delay(2000);
+            QString message = "Jaką wartość ma mieć as?";
             QMessageBox msgBox;
             msgBox.setText(message);
             msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
             msgBox.setDefaultButton(QMessageBox::No);
-            msgBox.setButtonText(QMessageBox::Yes, "Tak");
-            msgBox.setButtonText(QMessageBox::No, "Nie");
-
+            msgBox.setButtonText(QMessageBox::Yes, "1");
+            msgBox.setButtonText(QMessageBox::No, "10");
             int ret = msgBox.exec();
-
-            bool result = (ret == QMessageBox::Yes);
-
-            gameOn = result;
+            val = (ret == QMessageBox::Yes) ? 1 : 10;
 
         }
 
-        ui->lblPlayerScore->setText("Twoj ostateczny wynik to: " + QString::number(wynik));
+        wynik += val;
 
-        int wynikD = 0;
-        bool gameOnD = true;
-        while (gameOnD)
-        {
-            auto los = getCard();
-            QPixmap *image1 = los.getFace();
-            QLabel * label = new QLabel(this);
-            label->resize(w,h);
-            label->setPixmap((*image1).scaled(w,h,Qt::KeepAspectRatio));
-            auto items = ui->dealerCardsLayout->count();
-            ui->dealerCardsLayout->addWidget(label,0,items);
-            los.printInfo();
-            wynikD += los.getValue(false);
-            if (wynikD > 21) break;
-            ui->lblDealerScore->setText("Wynik dealera: " + QString::number(wynikD));
-            if (wynikD >= 18) {
-                gameOnD = false;
-            }
+        delay(2000);
+
+        QString str = "Twój wynik: " + QString::number(wynik);
+        ui->lblPlayerScore->setText(str);
+        if (wynik > 21) break;
+        QString message = str + ", czy chcesz kontynuować?";
+        QMessageBox msgBox;
+        msgBox.setText(message);
+        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        msgBox.setDefaultButton(QMessageBox::No);
+        msgBox.setButtonText(QMessageBox::Yes, "Tak");
+        msgBox.setButtonText(QMessageBox::No, "Nie");
+
+        int ret = msgBox.exec();
+
+        bool result = (ret == QMessageBox::Yes);
+
+        gameOn = result;
+
+    }
+
+
+    int wynikD = 0;
+    bool gameOnD = true;
+    pause = 1000;
+    while (gameOnD)
+    {
+        auto los = getCard();
+        wynikD += los.getValue(false);
+
+        QTimer *timer = new QTimer(this);
+        timer->singleShot(pause, [this, los, wynikD] { showDealerCard(los, wynikD); });
+        delete timer;
+        pause += 1000;
+        los.printInfo();
+
+        if (wynikD > 21) break;
+        if (wynikD >= 18) {
+            gameOnD = false;
         }
+    }
 
-        ui->lblDealerScore->setText("Ostateczny wynik dealera to: " + QString::number(wynikD));
+    ui->lblResult->setText("");
+    QTimer *timer = new QTimer(this);
+    timer->singleShot(pause, [this, wynik, wynikD] {
 
-        ui->lblResult->setText("");
+        QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(ui->lblResult);
+        ui->lblResult->setGraphicsEffect(effect);
+
+        QPropertyAnimation *animation = new QPropertyAnimation(effect, "opacity");
+        animation->setDuration(500);
+        animation->setStartValue(0.0);
+        animation->setEndValue(1.0);
+        animation->setLoopCount(-1);
+        animation->start();
+        QObject::connect(animation, &QPropertyAnimation::finished, [effect]{ effect->setOpacity(1.0); });
+        QObject::connect(ui->btnReset, &QPushButton::clicked, animation, &QPropertyAnimation::stop);
+
         if (wynik > 21 && wynikD > 21) ui->lblResult->setText("Remis");
         else if (wynik > 21) ui->lblResult->setText("Przegrana.");
-        else if (wynikD > 21) ui->lblResult->setText("Wygrana");
-        else if (wynik > wynikD) ui->lblResult->setText("Wygrana");
+        else if (wynikD > 21) ui->lblResult->setText("Wygrana!");
+        else if (wynik > wynikD) ui->lblResult->setText("Wygrana!");
         else if (wynik == wynikD) ui->lblResult->setText("Remis");
         else ui->lblResult->setText("Przegrana");
+    });
+    delete timer;
 
-        ui->btnStart->setDisabled(false);
+
+    ui->btnStart->setDisabled(false);
 
 }
 

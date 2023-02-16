@@ -3,6 +3,7 @@
 #include <vector>
 #include <QDir>
 #include <QDebug>
+#include <QString>
 using namespace std;
 
 Card::Card(string s, int v)
@@ -29,66 +30,72 @@ int Card::getValue(bool isPlayer) {
 
 std::vector<Card> Card::getCardSet()
 {
+//    std::vector<Card> cards;
+//    cards.push_back(Card("kier", 2));
+//    cards.push_back(Card("kier", 3));
+//    cards.push_back(Card("kier", 4));
+//    cards.push_back(Card("kier", 5));
+//    cards.push_back(Card("kier", 6));
+//    cards.push_back(Card("kier", 7));
+//    cards.push_back(Card("kier", 8));
+//    cards.push_back(Card("kier", 9));
+//    cards.push_back(Card("kier", 10));
+//    cards.push_back(Card("kier", 11));
+//    cards.push_back(Card("kier", 12));
+//    cards.push_back(Card("kier", 13));
+//    cards.push_back(Card("kier", 14));
+//    cards.push_back(Card("karo", 2));
+//    cards.push_back(Card("karo", 3));
+//    cards.push_back(Card("karo", 4));
+//    cards.push_back(Card("karo", 5));
+//    cards.push_back(Card("karo", 6));
+//    cards.push_back(Card("karo", 7));
+//    cards.push_back(Card("karo", 8));
+//    cards.push_back(Card("karo", 9));
+//    cards.push_back(Card("karo", 10));
+//    cards.push_back(Card("karo", 11));
+//    cards.push_back(Card("karo", 12));
+//    cards.push_back(Card("karo", 13));
+//    cards.push_back(Card("karo", 14));
+//    cards.push_back(Card("pik", 2));
+//    cards.push_back(Card("pik", 3));
+//    cards.push_back(Card("pik", 4));
+//    cards.push_back(Card("pik", 5));
+//    cards.push_back(Card("pik", 6));
+//    cards.push_back(Card("pik", 7));
+//    cards.push_back(Card("pik", 8));
+//    cards.push_back(Card("pik", 9));
+//    cards.push_back(Card("pik", 10));
+//    cards.push_back(Card("pik", 11));
+//    cards.push_back(Card("pik", 12));
+//    cards.push_back(Card("pik", 13));
+//    cards.push_back(Card("pik", 14));
+//    cards.push_back(Card("trefl", 2));
+//    cards.push_back(Card("trefl", 3));
+//    cards.push_back(Card("trefl", 4));
+//    cards.push_back(Card("trefl", 5));
+//    cards.push_back(Card("trefl", 6));
+//    cards.push_back(Card("trefl", 7));
+//    cards.push_back(Card("trefl", 8));
+//    cards.push_back(Card("trefl", 9));
+//    cards.push_back(Card("trefl", 10));
+//    cards.push_back(Card("trefl", 11));
+//    cards.push_back(Card("trefl", 12));
+//    cards.push_back(Card("trefl", 13));
+//    cards.push_back(Card("trefl", 14));
+    const std::array<std::string, 4> suits = {"kier", "karo", "pik", "trefl"};
     std::vector<Card> cards;
-    cards.push_back(Card("kier", 2));
-    cards.push_back(Card("kier", 3));
-    cards.push_back(Card("kier", 4));
-    cards.push_back(Card("kier", 5));
-    cards.push_back(Card("kier", 6));
-    cards.push_back(Card("kier", 7));
-    cards.push_back(Card("kier", 8));
-    cards.push_back(Card("kier", 9));
-    cards.push_back(Card("kier", 10));
-    cards.push_back(Card("kier", 11));
-    cards.push_back(Card("kier", 12));
-    cards.push_back(Card("kier", 13));
-    cards.push_back(Card("kier", 14));
-    cards.push_back(Card("karo", 2));
-    cards.push_back(Card("karo", 3));
-    cards.push_back(Card("karo", 4));
-    cards.push_back(Card("karo", 5));
-    cards.push_back(Card("karo", 6));
-    cards.push_back(Card("karo", 7));
-    cards.push_back(Card("karo", 8));
-    cards.push_back(Card("karo", 9));
-    cards.push_back(Card("karo", 10));
-    cards.push_back(Card("karo", 11));
-    cards.push_back(Card("karo", 12));
-    cards.push_back(Card("karo", 13));
-    cards.push_back(Card("karo", 14));
-    cards.push_back(Card("pik", 2));
-    cards.push_back(Card("pik", 3));
-    cards.push_back(Card("pik", 4));
-    cards.push_back(Card("pik", 5));
-    cards.push_back(Card("pik", 6));
-    cards.push_back(Card("pik", 7));
-    cards.push_back(Card("pik", 8));
-    cards.push_back(Card("pik", 9));
-    cards.push_back(Card("pik", 10));
-    cards.push_back(Card("pik", 11));
-    cards.push_back(Card("pik", 12));
-    cards.push_back(Card("pik", 13));
-    cards.push_back(Card("pik", 14));
-    cards.push_back(Card("trefl", 2));
-    cards.push_back(Card("trefl", 3));
-    cards.push_back(Card("trefl", 4));
-    cards.push_back(Card("trefl", 5));
-    cards.push_back(Card("trefl", 6));
-    cards.push_back(Card("trefl", 7));
-    cards.push_back(Card("trefl", 8));
-    cards.push_back(Card("trefl", 9));
-    cards.push_back(Card("trefl", 10));
-    cards.push_back(Card("trefl", 11));
-    cards.push_back(Card("trefl", 12));
-    cards.push_back(Card("trefl", 13));
-    cards.push_back(Card("trefl", 14));
+    for (const auto& suit : suits) {
+        for (int value = 2; value <= 14; ++value) {
+            cards.push_back(Card(suit, value));
+        }
+    }
     return cards;
 }
 
 QPixmap* Card::getFace()
 {
-    QString currentDirectory = QDir::currentPath();
-        qDebug() << "Current directory: " << currentDirectory;
+    /*
     if(suit=="trefl" && value == 2) return new QPixmap("images/karty/trefl/2.png");
     if(suit=="trefl" && value == 3) return new QPixmap("images/karty/trefl/3.png");
     if(suit=="trefl" && value == 4) return new QPixmap("images/karty/trefl/4.png");
@@ -143,9 +150,21 @@ QPixmap* Card::getFace()
     if(suit=="karo" && value == 11) return new QPixmap("images/karty/karo/walet.png");
     if(suit=="karo" && value == 12) return new QPixmap("images/karty/karo/dama.png");
     if(suit=="karo" && value == 13) return new QPixmap("images/karty/karo/krol.png");
-    if(suit=="karo" && value == 14) return new QPixmap("images/karty/karo/as.png");
+    if(suit=="karo" && value == 14) return new QPixmap("images/karty/karo/as.png");*/
 
-    return nullptr;
+    QString filename = QString("images/karty/%1/%2.png").arg(QString::fromStdString(suit));
+    if (value >= 2 && value <= 10)
+        filename = filename.arg(value);
+    else if (value == 11)
+        filename = filename.arg("walet");
+    else if (value == 12)
+        filename = filename.arg("dama");
+    else if (value == 13)
+        filename = filename.arg("krol");
+    else if (value == 14)
+        filename = filename.arg("as");
+
+    return new QPixmap(filename);
 }
 
 QString Card::getImgSrc()

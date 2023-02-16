@@ -9,7 +9,9 @@ start::start(QWidget *parent)
     ui->setupUi(this);
     QString styleSheet = "* {background-color:#202020;}"
                         "QPushButton { background-color: #2e2f30; color: white;}"
-                         "QLabel { color: white; }";
+                         "QLabel { color: white; font-size: 30px; }"
+                         "QGridLayout { display: flex;"
+                         "justify-content: flex-start;}";
     qApp->setStyleSheet(styleSheet);
     qInfo() << qApp->styleSheet();
     int w = ui->imageLabel->width();
