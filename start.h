@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "blackjack.h"
+#include "makao.h"
 QT_BEGIN_NAMESPACE
 namespace Ui { class start; }
 QT_END_NAMESPACE
@@ -15,9 +16,12 @@ public:
     start(QWidget *parent = nullptr);
     ~start();
     blackjack bj;
+    Makao mk;
 
 private slots:
     void on_btnBlackjack_clicked();
+
+    void on_btnTest_clicked();
 
 private:
     Ui::start *ui;

@@ -1,0 +1,10 @@
+debug/blackjack.o
+debug/card.o
+debug/dice.o
+debug/main.o
+debug/makao.o
+debug/start.o
+debug/moc_blackjack.o
+debug/moc_dice.o
+debug/moc_makao.o
+debug/moc_start.o

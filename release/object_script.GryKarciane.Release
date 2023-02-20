@@ -1,0 +1,10 @@
+release/blackjack.o
+release/card.o
+release/dice.o
+release/main.o
+release/makao.o
+release/start.o
+release/moc_blackjack.o
+release/moc_dice.o
+release/moc_makao.o
+release/moc_start.o

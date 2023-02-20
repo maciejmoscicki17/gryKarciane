@@ -18,13 +18,12 @@ blackjack::blackjack(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::blackjack)
 {
-    this->setStyleSheet("*{background-image:url(\"images/background.jpg\"); background-position: center;} "
-                        "");
     int w=100, h=152;
     ui->setupUi(this);
     this->setFixedSize(this->size());
     ui->dealerCardsLayout->setAlignment(Qt::AlignHCenter);
     ui->playerCardsLayout->setAlignment(Qt::AlignHCenter);
+    connect(this, &QDialog::rejected, this, &blackjack::resetAll);
 }
 
 

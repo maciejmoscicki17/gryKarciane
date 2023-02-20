@@ -24,7 +24,7 @@
     <rect>
      <x>310</x>
      <y>140</y>
-     <width>851</width>
+     <width>1081</width>
      <height>151</height>
     </rect>
    </property>
@@ -39,7 +39,7 @@
     <rect>
      <x>310</x>
      <y>590</y>
-     <width>851</width>
+     <width>1081</width>
      <height>151</height>
     </rect>
    </property>
@@ -48,8 +48,8 @@
   <widget class="QPushButton" name="btnStart">
    <property name="geometry">
     <rect>
-     <x>1280</x>
-     <y>290</y>
+     <x>1420</x>
+     <y>280</y>
      <width>181</width>
      <height>101</height>
     </rect>
@@ -103,8 +103,8 @@
   <widget class="QPushButton" name="btnReset">
    <property name="geometry">
     <rect>
-     <x>1280</x>
-     <y>410</y>
+     <x>1420</x>
+     <y>390</y>
      <width>181</width>
      <height>101</height>
     </rect>
@@ -116,8 +116,8 @@
   <widget class="QPushButton" name="btnExit">
    <property name="geometry">
     <rect>
-     <x>1280</x>
-     <y>520</y>
+     <x>1420</x>
+     <y>500</y>
      <width>181</width>
      <height>101</height>
     </rect>

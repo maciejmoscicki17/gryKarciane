@@ -12,15 +12,18 @@ SOURCES += \
     blackjack.cpp \
     card.cpp \
     main.cpp \
+    makao.cpp \
     start.cpp
 
 HEADERS += \
     blackjack.h \
     card.h \
+    makao.h \
     start.h
 
 FORMS += \
     blackjack.ui \
+    makao.ui \
     start.ui
 
 # Default rules for deployment.

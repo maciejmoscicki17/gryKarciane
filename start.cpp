@@ -13,15 +13,14 @@ start::start(QWidget *parent)
                          "QGridLayout { display: flex;"
                          "justify-content: flex-start;}";
     qApp->setStyleSheet(styleSheet);
-    qInfo() << qApp->styleSheet();
     int w = ui->imageLabel->width();
     int h = ui->imageLabel->height();
+    ui->lblTitle->setText("Gry karciane");
+    ui->lblTitle->setAlignment(Qt::AlignCenter);
 
-    QPixmap map("images/gryKarciane.jpg");
+    QPixmap map("images/gryKarciane-removebg.png");
     map.size();
     ui->imageLabel->setPixmap(map.scaled(w,h,Qt::KeepAspectRatio));
-    qInfo() << w << "  " << h;
-//    ui->imageLabel
 }
 
 start::~start()
@@ -33,5 +32,11 @@ start::~start()
 void start::on_btnBlackjack_clicked()
 {
     bj.showFullScreen();
+}
+
+
+void start::on_btnTest_clicked()
+{
+    mk.showFullScreen();
 }
 
