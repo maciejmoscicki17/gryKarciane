@@ -11,6 +11,7 @@ CONFIG += c++17
 SOURCES += \
     blackjack.cpp \
     card.cpp \
+    dice.cpp \
     main.cpp \
     makao.cpp \
     start.cpp
@@ -18,8 +19,10 @@ SOURCES += \
 HEADERS += \
     blackjack.h \
     card.h \
+    dice.h \
     makao.h \
-    start.h
+    start.h \
+    ui_dice.h
 
 FORMS += \
     blackjack.ui \
