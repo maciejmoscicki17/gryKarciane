@@ -8,6 +8,7 @@
 
 #include <memory>
 #include "../dice.h"
+#include <QtGui/qtextcursor.h>
 #include <QtCore/qmetatype.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'dice.h' doesn't include <QObject>."
@@ -25,74 +26,112 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 namespace {
-struct qt_meta_stringdata_Dice_t {
-    uint offsetsAndSizes[2];
+struct qt_meta_stringdata_dice_t {
+    uint offsetsAndSizes[8];
     char stringdata0[5];
+    char stringdata1[20];
+    char stringdata2[1];
+    char stringdata3[21];
 };
 #define QT_MOC_LITERAL(ofs, len) \
-    uint(sizeof(qt_meta_stringdata_Dice_t::offsetsAndSizes) + ofs), len 
-Q_CONSTINIT static const qt_meta_stringdata_Dice_t qt_meta_stringdata_Dice = {
+    uint(sizeof(qt_meta_stringdata_dice_t::offsetsAndSizes) + ofs), len 
+Q_CONSTINIT static const qt_meta_stringdata_dice_t qt_meta_stringdata_dice = {
     {
-        QT_MOC_LITERAL(0, 4)   // "Dice"
+        QT_MOC_LITERAL(0, 4),  // "dice"
+        QT_MOC_LITERAL(5, 19),  // "on_btnStart_clicked"
+        QT_MOC_LITERAL(25, 0),  // ""
+        QT_MOC_LITERAL(26, 20)   // "on_btnReroll_clicked"
     },
-    "Dice"
+    "dice",
+    "on_btnStart_clicked",
+    "",
+    "on_btnReroll_clicked"
 };
 #undef QT_MOC_LITERAL
 } // unnamed namespace
 
-Q_CONSTINIT static const uint qt_meta_data_Dice[] = {
+Q_CONSTINIT static const uint qt_meta_data_dice[] = {
 
  // content:
       10,       // revision
        0,       // classname
        0,    0, // classinfo
-       0,    0, // methods
+       2,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
        0,       // signalCount
 
+ // slots: name, argc, parameters, tag, flags, initial metatype offsets
+       1,    0,   26,    2, 0x08,    1 /* Private */,
+       3,    0,   27,    2, 0x08,    2 /* Private */,
+
+ // slots: parameters
+    QMetaType::Void,
+    QMetaType::Void,
+
        0        // eod
 };
 
-Q_CONSTINIT const QMetaObject Dice::staticMetaObject = { {
+Q_CONSTINIT const QMetaObject dice::staticMetaObject = { {
     QMetaObject::SuperData::link<QDialog::staticMetaObject>(),
-    qt_meta_stringdata_Dice.offsetsAndSizes,
-    qt_meta_data_Dice,
+    qt_meta_stringdata_dice.offsetsAndSizes,
+    qt_meta_data_dice,
     qt_static_metacall,
     nullptr,
-    qt_incomplete_metaTypeArray<qt_meta_stringdata_Dice_t,
+    qt_incomplete_metaTypeArray<qt_meta_stringdata_dice_t,
         // Q_OBJECT / Q_GADGET
-        QtPrivate::TypeAndForceComplete<Dice, std::true_type>
+        QtPrivate::TypeAndForceComplete<dice, std::true_type>,
+        // method 'on_btnStart_clicked'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'on_btnReroll_clicked'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>
     >,
     nullptr
 } };
 
-void Dice::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+void dice::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
-    (void)_o;
-    (void)_id;
-    (void)_c;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        auto *_t = static_cast<dice *>(_o);
+        (void)_t;
+        switch (_id) {
+        case 0: _t->on_btnStart_clicked(); break;
+        case 1: _t->on_btnReroll_clicked(); break;
+        default: ;
+        }
+    }
     (void)_a;
 }
 
-const QMetaObject *Dice::metaObject() const
+const QMetaObject *dice::metaObject() const
 {
     return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
 }
 
-void *Dice::qt_metacast(const char *_clname)
+void *dice::qt_metacast(const char *_clname)
 {
     if (!_clname) return nullptr;
-    if (!strcmp(_clname, qt_meta_stringdata_Dice.stringdata0))
+    if (!strcmp(_clname, qt_meta_stringdata_dice.stringdata0))
         return static_cast<void*>(this);
     return QDialog::qt_metacast(_clname);
 }
 
-int Dice::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+int dice::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = QDialog::qt_metacall(_c, _id, _a);
+    if (_id < 0)
+        return _id;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        if (_id < 2)
+            qt_static_metacall(this, _c, _id, _a);
+        _id -= 2;
+    } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
+        if (_id < 2)
+            *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
+        _id -= 2;
+    }
     return _id;
 }
 QT_WARNING_POP

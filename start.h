@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "blackjack.h"
+#include "dice.h"
 #include "makao.h"
 QT_BEGIN_NAMESPACE
 namespace Ui { class start; }
@@ -17,11 +18,14 @@ public:
     ~start();
     blackjack bj;
     Makao mk;
+    dice dc;
 
 private slots:
     void on_btnBlackjack_clicked();
 
     void on_btnTest_clicked();
+
+    void on_btnDices_clicked();
 
 private:
     Ui::start *ui;

@@ -1,27 +1,51 @@
 #ifndef DICE_H
 #define DICE_H
+
+#include <QDialog>
+#include <QWidget>
 #include <vector>
 #include <stdlib.h>
 #include <time.h>
 #include <ctime>
+#include <random>
 #include <chrono>
 #include <algorithm>
+#include "ui_dice.h"
+#include "qpixmap.h"
 
-class dice
+namespace Ui {
+class dice;
+}
+
+class dice : public QDialog
 {
-private:
-    int numberOfPips = 0;
+    Q_OBJECT
+
 public:
+    explicit dice(QWidget *parent = nullptr);
+    std::vector<dice> playerDices;
+    std::vector<dice> enemyDices;
+    ~dice();
+    dice(const dice &other); // konstruktor kopiujący
+    dice &operator=(const dice &other); // operator przypisania
     void setPipsOfDice();
-    int getPipsOfDice();
+    int getPipsOfDice() const;
     int rollDice();
-    void rerollDices(std::vector<int> indexes, dice dices[]);
-    static bool compare(dice a, dice b);
-    void prepare(dice dices[]);
-    void check(dice dices[]);
-    int calculateScore(dice dices[]);
-    void compareHands(dice player1[], dice player2[]);
-    dice();
+    void rerollDices(std::vector<int> indexes, std::vector<dice> &dices);
+    static bool compare(const dice &a, const dice &b);
+    void check(std::vector<dice> dices);
+    void prepare(std::vector<dice> &dices);
+    int calculateScore(const std::vector<dice>& dices);
+    QString compareHands(const std::vector<dice>& playerDices, const std::vector<dice>& enemyDices);
+    QPixmap* getFace();
+    void showDices(std::vector<dice> dices);
+private:
+    Ui::dice *ui;
+    int numberOfPips = 0;
+    QString suit;
+private slots:
+    void on_btnStart_clicked();
+    void on_btnReroll_clicked();
 };
 
-#endif // DICE_H
+#endif // DICE

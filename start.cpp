@@ -40,3 +40,9 @@ void start::on_btnTest_clicked()
     mk.showFullScreen();
 }
 
+
+void start::on_btnDices_clicked()
+{
+    dc.show();
+}
+

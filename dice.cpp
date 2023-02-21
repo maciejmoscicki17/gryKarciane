@@ -1,123 +1,274 @@
 #include "dice.h"
+#include "ui_dice.h"
 #include <iostream>
 #include <map>
-
-int dice::getPipsOfDice() { return numberOfPips; }
-void dice::setPipsOfDice() { numberOfPips = rollDice(); }
-int dice::rollDice() {
-    srand(std::chrono::high_resolution_clock::now().time_since_epoch().count());
-    return rand() % 6 + 1;
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QPushButton>
+#include <QGraphicsScene>
+#include <QGraphicsView>
+#include <QGraphicsPixmapItem>
+#include <QMessageBox>
+#include <QTimer>
+#include <QGraphicsOpacityEffect>
+#include <QPropertyAnimation>
+#include <QFrame>
+#include <QThread>
+#include <QPalette>
+#include <QtDebug>
+#include <cstdlib>
+dice::dice(QWidget *parent)
+    : QDialog(parent)
+    , ui(new Ui::dice)
+{
+    ui->setupUi(this);
+    this->setFixedSize(this->size());
+    playerDices.clear();
+    enemyDices.clear();
 }
-void dice::rerollDices(std::vector<int> indexes, dice dices[]) {
+
+dice::~dice()
+{
+    delete ui;
+}
+void dice::on_btnStart_clicked()
+{
+    QString message = "Runda 1, przelosuj kości, aby przejść do Rundy 2!";
+    QMessageBox msgBox;
+    msgBox.setText(message);
+    msgBox.setStandardButtons(QMessageBox::Ok);
+    msgBox.setDefaultButton(QMessageBox::Ok);
+    msgBox.exec();
+    // wypełnienie wektorów std::vector<dice>
+    playerDices.resize(5);
+    enemyDices.resize(5);
+    qDebug() << "start";
+    for (int i =0; i < 5; i++)
+    {
+        playerDices[i].setPipsOfDice();
+        qDebug() << "p" << playerDices[i].getPipsOfDice();
+        enemyDices[i].setPipsOfDice();
+        qDebug() <<"e" << enemyDices[i].getPipsOfDice();
+    }
+    showDices(playerDices);
+
+}
+
+void dice::on_btnReroll_clicked()
+{
+    std::vector<int> indexes;
+    if (ui->cbDice_1->isChecked()) { indexes.push_back(0); }
+    if (ui->cbDice_2->isChecked()) { indexes.push_back(1); }
+    if (ui->cbDice_3->isChecked()) { indexes.push_back(2); }
+    if (ui->cbDice_4->isChecked()) { indexes.push_back(3); }
+    if (ui->cbDice_5->isChecked()) { indexes.push_back(4); }
+    if (!indexes.empty()) {
+        rerollDices(indexes, playerDices);
+        qDebug() << "-";
+        for (int i = 0; i < 5; i++) {
+            qDebug() << playerDices[i].getPipsOfDice();
+        }
+    }
+    QString message = "Runda 2, Twoje kości zostały przelosowane, o to kości przeciwnika: ";
+    QMessageBox msgBox;
+    msgBox.setText(message);
+    msgBox.setStandardButtons(QMessageBox::Ok);
+    msgBox.setDefaultButton(QMessageBox::Ok);
+    msgBox.exec();
+    ui->lblResult->setText(compareHands(playerDices, enemyDices));
+
+}
+
+dice &dice::operator=(const dice &other)
+{
+    if (this != &other) {
+        this->numberOfPips = 0;
+        this->numberOfPips = other.numberOfPips;
+    }
+    return *this;
+}
+
+dice::dice(const dice &other) : ui(new Ui::dice)
+{
+    this->numberOfPips = 0;
+    this->numberOfPips = other.numberOfPips;
+}
+
+int dice::getPipsOfDice() const
+{
+    return numberOfPips;
+}
+
+void dice::setPipsOfDice()
+{
+    numberOfPips = rollDice();
+}
+
+int dice::rollDice()
+{
+    std::random_device srng;
+    std::mt19937 rng;
+    rng.seed(srng());
+    std::uniform_int_distribution<int> range(1, 6);
+    return range(rng);
+}
+
+void dice::rerollDices(std::vector<int> indexes, std::vector<dice> &dices)
+{
     for (auto i : indexes) {
         dices[i].setPipsOfDice();
+        qDebug() << i << "indx";
     }
 }
-bool dice::compare(dice a, dice b) { return a.getPipsOfDice() < b.getPipsOfDice(); }
 
-void dice::prepare(dice dices[]) {
-    std::sort(dices, dices + 5, compare);
+void dice::prepare(std::vector<dice> &dices)
+{
+    std::sort(dices.begin(), dices.end(), &compare);
 }
-void dice::check(dice dices[]) {
-    std::vector<int> pips(6, 0);
-    bool pair = false;
-    bool triple = false;
-    for (int i = 0; i < 5; i++) {
-        pips[dices[i].getPipsOfDice() - 1]++;
-    }
-    for (int i = 0; i < 6; i++) {
-        if (pips[i] == 2) {
-            std::cout << "Gracz ma parę [" << i + 1 << "]" << std::endl;
-            pair = true;
-        }
-        if (pips[i] == 3) {
-            std::cout << "Gracz ma trójkę [" << i + 1  << "]" << std::endl;
-            triple = true;
-        }
-        if (pips[i] == 4) {
-            std::cout << "Gracz ma karetę [" << i + 1 << "]" << std::endl;
-        }
-        if (pips[i] == 5) {
-            std::cout << "Gracz ma poker [" << i + 1 << "]" << std::endl;
-        }
-        if (triple && pair)
-        {
-            std::cout << "Gracz ma fulla!" << std::endl;
-        }
-    }
 
-    prepare(this);
-    int stritCounter = 0;
-    for (int i = 0; i < 6; i++) {
-        if (pips[i] == 1)  stritCounter++;
-        else  stritCounter = 0;
-        if (stritCounter == 5) std::cout << "Gracz ma strita!" << std::endl;
-    }
+void dice::check(std::vector<dice> dices) {
+
 }
-int dice::calculateScore(dice dices[]) {
+
+bool dice::compare(const dice &a, const dice &b)
+{
+    return a.getPipsOfDice() < b.getPipsOfDice();
+}
+
+int dice::calculateScore(const std::vector<dice>& dices) {
     std::vector<int> pips(6, 0);
-    for (int i = 0; i < 5; i++) {
+    for (size_t i = 0; i < dices.size(); i++) {
         pips[dices[i].getPipsOfDice() - 1]++;
     }
 
-    // sprawdzanie kombinacji punktowanych
     int score = 0;
-    bool pair = false;
-    bool triple = false;
-    for (int i = 0; i < 6; i++) {
-        if (pips[i] == 2) {
-            pair = true;
-            score += (i + 1) * 10;
+
+    // Sprawdzenie czy jest full, kareta lub generł (wszystkie kostki takie same)
+    int maxPips = *std::max_element(pips.begin(), pips.end());
+    if (maxPips == 5) { // Generał
+        score += 50000;
+        return score;
+    } else if (maxPips == 4) { // Kareta
+        score += 40000;
+    } else if (maxPips == 3) { // Trójka
+        score += 30000;
+        if (*std::max_element(pips.begin(), pips.end()) == 2) { // Full
+            score += 20000;
+            return score;
         }
-        if (pips[i] == 3) {
-            triple = true;
-            score += (i + 1) * 100;
+    } else if (*std::max_element(pips.begin(), pips.end()) == 2) { // Para lub dwie pary
+        int pairs = 0;
+        for (int i = 0; i < 6; i++) {
+            if (pips[i] == 2) {
+                pairs++;
+                score += (i + 1) * 10;
+            }
         }
-        if (pips[i] == 4) {
-            score += (i + 1) * 1000;
-        }
-        if (pips[i] == 5) {
-            score += (i + 1) * 10000;
-        }
-        if (triple && pair)
-        {
+        if (pairs == 2) { // Dwie pary
+            score += 3000;
+        } else { // Para
             score += 1000;
         }
     }
 
-    // sprawdzanie strita
-    std::sort(dices, dices + 5, dice::compare);
+    // Sprawdzenie czy jest strit
     int stritCounter = 0;
     for (int i = 0; i < 6; i++) {
-        if (pips[i] == 1)  stritCounter++;
-        else  stritCounter = 0;
-        if (stritCounter == 5) {
-            score += 1500;
-            break;
+        if (pips[i] == 1) {
+            stritCounter++;
+        } else {
+            stritCounter = 0;
+        }
+        if (stritCounter == 5) { // Duży strit
+            score += 20000;
+            return score;
         }
     }
+    if (pips[0] == 1 && pips[1] == 1 && pips[2] == 1 && pips[3] == 1 && pips[4] == 1) { // Mały strit
+        score += 10000;
+        return score;
+    }
+
+    // W pozostałych przypadkach sumujemy punkty za każdą kostkę
+    for (int i = 0; i < 6; i++) {
+        score += (i + 1) * pips[i];
+    }
+
     return score;
 }
-void dice::compareHands(dice player1[], dice player2[]) {
-    int score1 = calculateScore(player1);
-    int score2 = calculateScore(player2);
-    if (score1 > score2) {
-        std::cout << "Wygrywasz!";
+QString dice::compareHands(const std::vector<dice>& playerDices, const std::vector<dice>& enemyDices)
+{
+    int playerScore = calculateScore(playerDices);
+    int enemyScore = calculateScore(enemyDices);
+    if (playerScore > enemyScore) {
+        return "Wygrałeś!";
     }
-    else if (score2 > score1) {
-        std::cout << "Przegrywasz!";
+    else if (playerScore < enemyScore) {
+        return "Przegrałeś!";
     }
     else {
-        // W przypadku remisu sprawdź, która kombinacja ma wyższe wartości oczek
-        for (int i = 4; i >= 0; i--) {
-            if (player1[i].getPipsOfDice() > player2[i].getPipsOfDice()) {
-                std::cout << "Wygrywasz!";
-            }
-            else if (player2[i].getPipsOfDice() > player1[i].getPipsOfDice()) {
-                std::cout << "Przegrywasz!";
-            }
-        }
-        std::cout << "Remis!"; // Remis - obaj gracze mają taką samą kombinację i takie same oczka
+        return "Remis!";
     }
 }
-dice::dice()  { setPipsOfDice(); }
+QPixmap* dice::getFace()
+{
+
+    QString filename = QString("images/kości/%1.png");
+
+    switch (this->getPipsOfDice()) {
+    case 1: {
+        filename = filename.arg("dice1");
+        break;
+    }
+    case 2: {
+        filename = filename.arg("dice2");
+        break;
+    }
+    case 3: {
+        filename = filename.arg("dice3");
+        break;
+    }
+    case 4: {
+        filename = filename.arg("dice4");
+        break;
+    }
+    case 5: {
+        filename = filename.arg("dice5");
+        break;
+    }
+    case 6: {
+        filename = filename.arg("dice6");
+        break;
+    }
+    }
+
+    return new QPixmap(filename);
+}
+
+void dice::showDices(std::vector<dice> dices){
+    for(auto i : dices) {
+        qDebug() << "a";
+        QPixmap* image = i.getFace();
+        QLabel * label = new QLabel(this);
+        label->resize(100,100);
+        qDebug() << "re";
+        label->setPixmap((*image).scaled(100,100,Qt::KeepAspectRatio));
+        QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(label);
+        label->setGraphicsEffect(effect);
+        QPropertyAnimation *animation = new QPropertyAnimation(effect, "opacity");
+        animation->setDuration(500);
+        animation->setStartValue(0.0);
+        animation->setEndValue(1.0);
+        animation->start();
+        auto items = ui->playerDicesLayout->count();
+        ui->playerDicesLayout->addWidget(label,0,items);
+    }
+
+
+//    QLabel * label = new QLabel(this);
+//    QPixmap* image = new QPixmap("images/karty/kier/10.png");
+//    label->setPixmap(( *image).scaled(100,100,Qt::KeepAspectRatio));
+//    ui->playerDicesLayout->addWidget(label);
+}
+
+

@@ -21,11 +21,11 @@ HEADERS += \
     card.h \
     dice.h \
     makao.h \
-    start.h \
-    ui_dice.h
+    start.h
 
 FORMS += \
     blackjack.ui \
+    dice.ui \
     makao.ui \
     start.ui
 

@@ -29,6 +29,7 @@ public:
     QWidget *verticalLayoutWidget;
     QVBoxLayout *verticalLayout;
     QPushButton *btnTest;
+    QPushButton *btnDices;
     QPushButton *btnBlackjack;
     QLabel *lblTitle;
     QMenuBar *menubar;
@@ -61,6 +62,14 @@ public:
 
         verticalLayout->addWidget(btnTest);
 
+        btnDices = new QPushButton(verticalLayoutWidget);
+        btnDices->setObjectName("btnDices");
+        btnDices->setEnabled(true);
+        btnDices->setMinimumSize(QSize(0, 100));
+        btnDices->setFont(font);
+
+        verticalLayout->addWidget(btnDices);
+
         btnBlackjack = new QPushButton(verticalLayoutWidget);
         btnBlackjack->setObjectName("btnBlackjack");
         btnBlackjack->setEnabled(true);
@@ -91,6 +100,7 @@ public:
         start->setWindowTitle(QCoreApplication::translate("start", "start", nullptr));
         imageLabel->setText(QCoreApplication::translate("start", "TextLabel", nullptr));
         btnTest->setText(QCoreApplication::translate("start", "Makao", nullptr));
+        btnDices->setText(QCoreApplication::translate("start", "Dices", nullptr));
         btnBlackjack->setText(QCoreApplication::translate("start", "Blackjack", nullptr));
         lblTitle->setText(QCoreApplication::translate("start", "TextLabel", nullptr));
     } // retranslateUi
