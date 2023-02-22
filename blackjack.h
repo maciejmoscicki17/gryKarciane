@@ -14,7 +14,6 @@ class blackjack : public QDialog
 public:
     explicit blackjack(QWidget *parent = nullptr);
     ~blackjack();
-    void buttonClicked();
     void setupCards();
     Card getCard();
     void resetAll();
@@ -24,9 +23,7 @@ public:
 
 private slots:
     void on_btnStart_clicked();
-
     void on_btnReset_clicked();
-
     void on_btnExit_clicked();
 
 private:

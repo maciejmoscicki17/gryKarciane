@@ -26,8 +26,8 @@ public:
     std::vector<dice> playerDices;
     std::vector<dice> enemyDices;
     ~dice();
-    dice(const dice &other); // konstruktor kopiujący
-    dice &operator=(const dice &other); // operator przypisania
+    dice(const dice &other);
+    dice &operator=(const dice &other);
     void setPipsOfDice();
     int getPipsOfDice() const;
     int rollDice();

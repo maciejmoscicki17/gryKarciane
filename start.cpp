@@ -6,6 +6,7 @@ start::start(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::start)
 {
+    //Wersja Qt: Desktop Qt 6.4.2 MinGW 64-bit
     ui->setupUi(this);
     QString styleSheet = "* {background-color:#202020;}"
                         "QPushButton { background-color: #2e2f30; color: white;}"
@@ -21,6 +22,7 @@ start::start(QWidget *parent)
     QPixmap map("images/gryKarciane-removebg.png");
     map.size();
     ui->imageLabel->setPixmap(map.scaled(w,h,Qt::KeepAspectRatio));
+    this->setWindowTitle("Gry");
 }
 
 start::~start()

@@ -27,6 +27,7 @@ dice::dice(QWidget *parent)
     playerDices.clear();
     enemyDices.clear();
     ui->btnReroll->setEnabled(false);
+    this->setWindowTitle("Dices");
 }
 
 dice::~dice()
@@ -45,13 +46,10 @@ void dice::on_btnStart_clicked()
     // wypełnienie wektorów std::vector<dice>
     playerDices.resize(5);
     enemyDices.resize(5);
-    qDebug() << "start";
     for (int i =0; i < 5; i++)
     {
         playerDices[i].setPipsOfDice();
-        qDebug() << "p" << playerDices[i].getPipsOfDice();
         enemyDices[i].setPipsOfDice();
-        qDebug() <<"e" << enemyDices[i].getPipsOfDice();
     }
     showDices(playerDices);
     ui->btnReroll->setEnabled(true);
@@ -67,10 +65,6 @@ void dice::on_btnReroll_clicked()
     if (ui->cbDice_5->isChecked()) { indexes.push_back(4); }
     if (!indexes.empty()) {
         rerollDices(indexes, playerDices);
-        qDebug() << "-";
-        for (int i = 0; i < 5; i++) {
-            qDebug() << playerDices[i].getPipsOfDice();
-        }
     }
     QString message = "Runda 2, Twoje kości zostały przelosowane, o to kości przeciwnika: ";
     QMessageBox msgBox;
@@ -125,7 +119,6 @@ void dice::rerollDices(std::vector<int> indexes, std::vector<dice> &dices)
 {
     for (auto i : indexes) {
         dices[i].setPipsOfDice();
-        qDebug() << i << "indx";
     }
 }
 
@@ -151,20 +144,19 @@ int dice::calculateScore(const std::vector<dice>& dices) {
 
     int score = 0;
 
-    // Sprawdzenie czy jest full, kareta lub generł (wszystkie kostki takie same)
     int maxPips = *std::max_element(pips.begin(), pips.end());
-    if (maxPips == 5) { // Generał
+    if (maxPips == 5) {
         score += 50000;
         return score;
-    } else if (maxPips == 4) { // Kareta
+    } else if (maxPips == 4) {
         score += 40000;
-    } else if (maxPips == 3) { // Trójka
+    } else if (maxPips == 3) {
         score += 30000;
-        if (*std::max_element(pips.begin(), pips.end()) == 2) { // Full
+        if (*std::max_element(pips.begin(), pips.end()) == 2) {
             score += 20000;
             return score;
         }
-    } else if (*std::max_element(pips.begin(), pips.end()) == 2) { // Para lub dwie pary
+    } else if (*std::max_element(pips.begin(), pips.end()) == 2) {
         int pairs = 0;
         for (int i = 0; i < 6; i++) {
             if (pips[i] == 2) {
@@ -172,14 +164,13 @@ int dice::calculateScore(const std::vector<dice>& dices) {
                 score += (i + 1) * 10;
             }
         }
-        if (pairs == 2) { // Dwie pary
+        if (pairs == 2) {
             score += 3000;
-        } else { // Para
+        } else {
             score += 1000;
         }
     }
 
-    // Sprawdzenie czy jest strit
     int stritCounter = 0;
     for (int i = 0; i < 6; i++) {
         if (pips[i] == 1) {
@@ -187,17 +178,16 @@ int dice::calculateScore(const std::vector<dice>& dices) {
         } else {
             stritCounter = 0;
         }
-        if (stritCounter == 5) { // Duży strit
+        if (stritCounter == 5) {
             score += 20000;
             return score;
         }
     }
-    if (pips[0] == 1 && pips[1] == 1 && pips[2] == 1 && pips[3] == 1 && pips[4] == 1) { // Mały strit
+    if (pips[0] == 1 && pips[1] == 1 && pips[2] == 1 && pips[3] == 1 && pips[4] == 1) {
         score += 10000;
         return score;
     }
 
-    // W pozostałych przypadkach sumujemy punkty za każdą kostkę
     for (int i = 0; i < 6; i++) {
         score += (i + 1) * pips[i];
     }
@@ -255,11 +245,9 @@ QPixmap* dice::getFace()
 
 void dice::showDices(std::vector<dice> dices){
     for(auto i : dices) {
-        qDebug() << "a";
         QPixmap* image = i.getFace();
         QLabel * label = new QLabel(this);
         label->resize(100,100);
-        qDebug() << "re";
         label->setPixmap((*image).scaled(100,100,Qt::KeepAspectRatio));
         QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(label);
         label->setGraphicsEffect(effect);

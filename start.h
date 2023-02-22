@@ -22,9 +22,7 @@ public:
 
 private slots:
     void on_btnBlackjack_clicked();
-
     void on_btnTest_clicked();
-
     void on_btnDices_clicked();
 
 private:

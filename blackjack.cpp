@@ -33,11 +33,6 @@ blackjack::~blackjack()
     delete ui;
 }
 
-void blackjack::buttonClicked()
-{
-
-}
-
 void blackjack::setupCards()
 {
     cards.clear();
@@ -116,8 +111,6 @@ void blackjack::showDealerCard(Card card, int score)
     animation->setStartValue(0.0);
     animation->setEndValue(1.0);
     animation->start();
-
-
 
     auto items = ui->dealerCardsLayout->count();
     ui->dealerCardsLayout->addWidget(label,0,items);

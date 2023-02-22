@@ -36,11 +36,8 @@ public:
 
 private slots:
     void on_btnStart_clicked();
-
     void on_btnGivePlayerCard_clicked();
-
     void on_btnRestart_clicked();
-
     void on_btnExit_clicked();
 
 private:
@@ -59,17 +56,9 @@ public:
 
     explicit ClickableLabel(QWidget* parent = nullptr) : QLabel(parent) {}
 
-    // Override mousePressEvent
     void mousePressEvent(QMouseEvent* event) override {
         Q_UNUSED(event);
         emit deleteRequested(this);
-//        if (parentWidget()) {
-//            QLayout* layout = parentWidget()->layout();
-//            if (layout) {
-//                layout->removeWidget(this);
-//                delete this;
-//            }
-//        }
     }
 
     void addCard(Card c){
