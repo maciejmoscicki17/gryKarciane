@@ -39,6 +39,8 @@ public:
     QString compareHands(const std::vector<dice>& playerDices, const std::vector<dice>& enemyDices);
     QPixmap* getFace();
     void showDices(std::vector<dice> dices);
+    void showeEnemyDices(std::vector<dice> dices);
+    void resetAll();
 private:
     Ui::dice *ui;
     int numberOfPips = 0;
@@ -46,6 +48,8 @@ private:
 private slots:
     void on_btnStart_clicked();
     void on_btnReroll_clicked();
+    void on_btnReset_clicked();
+    void on_btnExit_clicked();
 };
 
 #endif // DICE

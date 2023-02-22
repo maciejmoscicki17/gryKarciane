@@ -23,8 +23,10 @@ dice::dice(QWidget *parent)
 {
     ui->setupUi(this);
     this->setFixedSize(this->size());
+    resetAll();
     playerDices.clear();
     enemyDices.clear();
+    ui->btnReroll->setEnabled(false);
 }
 
 dice::~dice()
@@ -33,6 +35,7 @@ dice::~dice()
 }
 void dice::on_btnStart_clicked()
 {
+    resetAll();
     QString message = "Runda 1, przelosuj kości, aby przejść do Rundy 2!";
     QMessageBox msgBox;
     msgBox.setText(message);
@@ -51,7 +54,7 @@ void dice::on_btnStart_clicked()
         qDebug() <<"e" << enemyDices[i].getPipsOfDice();
     }
     showDices(playerDices);
-
+    ui->btnReroll->setEnabled(true);
 }
 
 void dice::on_btnReroll_clicked()
@@ -75,6 +78,11 @@ void dice::on_btnReroll_clicked()
     msgBox.setStandardButtons(QMessageBox::Ok);
     msgBox.setDefaultButton(QMessageBox::Ok);
     msgBox.exec();
+
+   resetAll();
+
+    showDices(playerDices);
+    showeEnemyDices(enemyDices);
     ui->lblResult->setText(compareHands(playerDices, enemyDices));
 
 }
@@ -263,12 +271,57 @@ void dice::showDices(std::vector<dice> dices){
         auto items = ui->playerDicesLayout->count();
         ui->playerDicesLayout->addWidget(label,0,items);
     }
+}
+void dice::showeEnemyDices(std::vector<dice> dices){
+    for(auto i : dices) {
+        QPixmap* image = i.getFace();
+        QLabel * label = new QLabel(this);
+        label->resize(100,100);
+        label->setPixmap((*image).scaled(100,100,Qt::KeepAspectRatio));
+        QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(label);
+        label->setGraphicsEffect(effect);
+        QPropertyAnimation *animation = new QPropertyAnimation(effect, "opacity");
+        animation->setDuration(500);
+        animation->setStartValue(0.0);
+        animation->setEndValue(1.0);
+        animation->start();
+        auto items = ui->enemyDicesLayout->count();
+        ui->enemyDicesLayout->addWidget(label,0,items);
+    }
+}
+void dice::resetAll(){
+    while (QLayoutItem *item = ui->enemyDicesLayout->takeAt(0)) {
+        delete item->widget();
+        delete item;
+    }
+    ui->enemyDicesLayout->setContentsMargins(0, 0, 0, 0);
 
-
-//    QLabel * label = new QLabel(this);
-//    QPixmap* image = new QPixmap("images/karty/kier/10.png");
-//    label->setPixmap(( *image).scaled(100,100,Qt::KeepAspectRatio));
-//    ui->playerDicesLayout->addWidget(label);
+    while (QLayoutItem *item = ui->playerDicesLayout->takeAt(0)) {
+        delete item->widget();
+        delete item;
+    }
+    ui->playerDicesLayout->setContentsMargins(0, 0, 0, 0);
+    ui->lblResult->setText("");
+    ui->cbDice_1->setChecked(false);
+    ui->cbDice_2->setChecked(false);
+    ui->cbDice_3->setChecked(false);
+    ui->cbDice_4->setChecked(false);
+    ui->cbDice_5->setChecked(false);
 }
 
+
+
+void dice::on_btnReset_clicked()
+{
+    resetAll();
+    playerDices.clear();
+    enemyDices.clear();
+}
+
+
+void dice::on_btnExit_clicked()
+{
+    resetAll();
+    this->close();
+}
 
